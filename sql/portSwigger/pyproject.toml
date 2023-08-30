@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "portswigger"
+version = "0.1.0"
+description = ""
+authors = ["Robin Burri <robinburri@tutanota.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+requests = "^2.31.0"
+urllib3 = "^2.0.4"
+bs4 = "^0.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

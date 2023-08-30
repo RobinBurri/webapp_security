@@ -11,3 +11,15 @@ doesn't break the app but return nothing
 => SELECT * FROM products WHERE category = '' or 1=1 --
 
 Final query = ' or 1=1 --
+
+Here's the breakdown of what happens:
+
+    SELECT * FROM products: This part of the query selects all columns from the "products" table.
+    WHERE category = '' or 1=1: This is the WHERE clause of the query. The condition category = '' is included as the original condition, and 1=1 is included as an additional condition. The 1=1 condition always evaluates to true, effectively making the entire WHERE clause true for all rows.
+
+The double hyphen -- at the end of the query is used to comment out the remainder of the query, ensuring that any characters after it are ignored.
+
+The SQL query SELECT * FROM products WHERE category = '' or 1=1 -- is effectively equivalent to SELECT * FROM products WHERE TRUE, as both conditions will evaluate to true for every row in the table.
+
+
+BYPASS THE WHERE CONDITION
