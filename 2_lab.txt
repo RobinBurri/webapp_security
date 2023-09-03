@@ -22,3 +22,5 @@ Solution:
 But first you can try without cfr token to see if it is righfully implemented. => in this case yes.
 
 BYPASS THE AND CONDITION
+
+Final PAYLOAD = administrator'--
