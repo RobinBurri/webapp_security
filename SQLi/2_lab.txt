@@ -1,3 +1,9 @@
+# SQL injection vulnerability allowing login bypass
+# APPRENTICE
+
+# BYPASS THE AND CONDITION
+# Final PAYLOAD = administrator'--
+
 Subverting application logic
 
 Consider an application that lets users log in with a username and password. If a user submits the username wiener and the password bluecheese, the application checks the credentials by performing the following SQL query:
@@ -21,6 +27,3 @@ Solution:
  The trick here is that you need a cfr token to send the query. You cannot send it directly.
 But first you can try without cfr token to see if it is righfully implemented. => in this case yes.
 
-BYPASS THE AND CONDITION
-
-Final PAYLOAD = administrator'--

