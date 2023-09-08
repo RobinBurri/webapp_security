@@ -12,7 +12,7 @@ look for the number of column
 
 #  3
 find which column is text type
-' UNION select NULL 'a' ---
+' UNION select NULL, 'a' ---
 
 # 4
 find DB version => 

