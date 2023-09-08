@@ -1,0 +1,16 @@
+SQL injection attack, listing the database contents on non-Oracle databases
+
+End Goals :
+- Determind the table name that contains usernames and passwords
+- Determind the revelent columns
+- Then output the data
+- log as Administrator
+
+STEPS
+- finder the number of column = 2
+- find if there is a text type column = yes, col 0 and 1
+- find the database version
+=> ' UNION select NULL, version()--
+=> POSTGRES SQL
+
+- output all the table from the database
