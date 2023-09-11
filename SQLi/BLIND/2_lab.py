@@ -17,6 +17,8 @@ USER_NAME = "administrator"
 TABLE_NAME = "users"
 COLUMN_NAME = "username"
 
+# find_password_length and solve_password are only working for Oracle DB for now
+
 
 def solve_password(base_url, cookies, password_length):
     password_extracted = ""
