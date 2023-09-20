@@ -1,4 +1,4 @@
-Lab: Blind SQL injection with conditional errors
+Lab: Blind SQL injection with conditional ERRORS
 
 Vulnerable parameter -> tracking cookie
 
