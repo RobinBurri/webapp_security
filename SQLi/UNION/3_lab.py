@@ -6,13 +6,7 @@ import urllib3
 
 urllib3.disable_warnings()
 
-# let the script go through the burp suite proxy
-# for debuging purposes
 proxies = {"http": "http://127.0.0.1:8080", "https": "http://127.0.0.1:8080"}
-
-
-# def union_attack(base_url, attack_payload):
-#     pass
 
 
 def order_attack(base_url):
