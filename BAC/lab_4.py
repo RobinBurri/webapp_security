@@ -1,18 +1,9 @@
 # Lab #4 User role can be modified in user profile
-# import re
 import sys
-
-# from typing import Optional, cast
 
 import requests
 import urllib3
-
-# from bs4 import BeautifulSoup
-# from bs4.element import Tag
 from colorama import Fore
-
-# import urllib.parse
-# from requests.exceptions import RequestException
 
 urllib3.disable_warnings()
 
