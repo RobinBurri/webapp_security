@@ -221,5 +221,5 @@ if __name__ == "__main__":
         print(f'[-] Example: {sys.argv[0]} www.google.com"')
         sys.exit(-1)
 
-    print("[*] Exploiting...")    
+    print("[*] Exploiting...")
     exploit(url)
