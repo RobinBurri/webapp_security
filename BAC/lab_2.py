@@ -1,3 +1,4 @@
+# Lab 2: Unprotected admin functionality with unpredictable URL
 import re
 import sys
 
@@ -5,9 +6,6 @@ import requests
 import urllib3
 from bs4 import BeautifulSoup
 from colorama import Fore
-
-# import urllib.parse
-# from requests.exceptions import RequestException
 
 urllib3.disable_warnings()
 
